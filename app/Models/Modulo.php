@@ -2,35 +2,38 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Modulo extends Migration
+class Modulo extends Model
 {
-    public function up()
-    {
-        Schema::create('modulos', function (Blueprint $table) {
-            $table->id();
-            $table->string('codigo');
-            $table->string('materia');
-            $table->integer('h_semanales');
-            $table->integer('h_totales');
-            $table->enum('turno', ['mañana', 'tarde']);
-            $table->string('aula');
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('especialidad_id');
-            $table->unsignedBigInteger('estudio_id');
-            $table->timestamps();
+    use HasFactory;
 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('especialidad_id')->references('id')->on('especialidades');
-            $table->foreign('estudio_id')->references('id')->on('estudios');
-        });
+    protected $fillable = [
+        'modulo_id',
+        'codigo',
+        'nombre',
+        'materia',
+        'h_semanales',
+        'h_totales',
+        'user_id',
+        'especialidad_id',
+        'curso_id',
+    ];
+
+    // Relaciones (ejemplos, ajusta según tus necesidades):
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function down()
+    public function especialidad()
     {
-        Schema::dropIfExists('modulos');
+        return $this->belongsTo(Especialidad::class, 'especialidad_id');
+    }
+
+    public function curso()
+    {
+        return $this->belongsTo(Curso::class, 'curso_id');
     }
 }
